@@ -1,4 +1,7 @@
-//RFID + Motor using Hbridge + Ultrasonic Sensors
+//1. Gate Access only using Smart Card (RFID)
+//2. Automatic closing of Gate using Ultrasonic sensor
+//3. Gardening System
+
 #include <SPI.h>
 #include <MFRC522.h>
 //RFID 
