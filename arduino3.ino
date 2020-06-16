@@ -43,7 +43,7 @@ void setup()
 
 void loop() 
 {
-  if(EEBlue.available())
+  if(EEBlue.available()) //if any command is sent via bluetooth
   {
     while(EEBlue.available()) 
     { // While there is more to be read, keep reading.
@@ -98,129 +98,192 @@ void lightControl(int count)//Control lights based on value
 }
 
 void control(String command)
-{//all 012 //fans 012 //lights 012
-//bedroom 012 //bedroom light 0123456 //bedroom fan 012
-//kitchen 012 //kitchen light 0123456 //kitchen fan 012 
-//hall 012
-Serial.println(command);
-if(command==("all off")) all(0);
-else if (command==("all on")) all(1);
-else if (command==("all auto")) all(2);
-else if(command==("fans off")) fans(0);
-else if (command==("fans on")) fans(1);
-else if (command==("fans auto")) fans(2);
-else if(command==("lights off")) lights(0);
-else if (command==("lights on")) lights(1);
-else if (command==("lights auto")) lights(2);
-else if (command==("bedroom off")) bedroom(0);
-else if (command==("bedroom on")) bedroom(1);
-else if (command==("bedroom auto")) bedroom(2);
-else if (command==("kitchen off")) kitchen(0);
-else if (command==("kitchen on")) kitchen(1);
-else if (command==("kitchen auto")) kitchen(2);
-else if (command==("hall off")) hall(0);
-else if (command==("hall on")) hall(1);
-else if (command==("hall auto")) hall(2);
-else if (command==("bedroom light off")) bedroomlight(0);
-else if (command==("bedroom light 1")) bedroomlight(1);
-else if (command==("bedroom light 2")) bedroomlight(2);
-else if (command==("bedroom light 3")) bedroomlight(3);
-else if (command==("bedroom light 4")) bedroomlight(4);
-else if (command==("bedroom light 5")) bedroomlight(5);
-else if (command==("bedroom light auto")) bedroomlight(6);
-else if (command==("bedroom fan off")) bedroomfan(0);
-else if (command==("bedroom fan on")) bedroomfan(1);
-else if (command==("bedroom fan auto")) bedroomfan(2);
-else if (command==("kitchen light off")) kitchenlight(0);
-else if (command==("kitchen light 1")) kitchenlight(1);
-else if (command==("kitchen light 2")) kitchenlight(2);
-else if (command==("kitchen light 3")) kitchenlight(3);
-else if (command==("kitchen light 4")) kitchenlight(4);
-else if (command==("kitchen light 5")) kitchenlight(5);
-else if (command==("kitchen light auto")) kitchenlight(6);
-else if (command==("kitchen fan off")) kitchenfan(0);
-else if (command==("kitchen fan on")) kitchenfan(1);
-else if (command==("kitchen fan auto")) kitchenfan(2);
-}
-
-void bedroomlight(int val){ //012345
-if(val==6)
-    for(int i=0;i<20;i++)
-    { if(EEBlue.available()) break;
-      lightReading(); delay(2000);
-    }    else lightControl(val);}
-void bedroomfan(int val)//012345
-{if (val==2) tempReading();
-else fanControl(val);}
-void bedroom(int val)
-{switch(val)
-{case 0: {   bedroomlight(0);
-bedroomfan(0);
-break;}
-case 1:{    bedroomlight(5);
-bedroomfan(1);
-break;}
-case 2:{bedroomlight(6);
-bedroomfan(2);
-break;}
-}}
-
-void kitchenlight(int val){
-  byte y =1;byte x = val;
-  wire(y,x);}
-void kitchenfan(int val){
-  byte y =2;byte x = val;
-  wire(y,x);}
-void kitchen(int val)
-{switch(val)
-{case 0:{ kitchenlight(val);
-kitchenfan(val);
-break;}
-case 1:{
-kitchenlight(5);
-kitchenfan(1);
-break;}
-case 2:{
-kitchenlight(6);
-kitchenfan(2);
-break;
-}}}
-
-void hall(int val)
 {
-byte y =3;
-byte x = val;
-wire(y,x);
+    //Options avaliable-
+    //all 012 //fans 012 //lights 012
+    //bedroom 012 //bedroom light 0123456 //bedroom fan 012
+    //kitchen 012 //kitchen light 0123456 //kitchen fan 012 
+    //hall 012
+    Serial.println(command);
+  
+    if(command==("all off")) all(0);
+    else if (command==("all on")) all(1);
+    else if (command==("all auto")) all(2);
+  
+    else if(command==("fans off")) fans(0);
+    else if (command==("fans on")) fans(1);
+    else if (command==("fans auto")) fans(2);
+  
+    else if(command==("lights off")) lights(0);
+    else if (command==("lights on")) lights(1);
+    else if (command==("lights auto")) lights(2);
+  
+    else if (command==("bedroom off")) bedroom(0);
+    else if (command==("bedroom on")) bedroom(1);
+    else if (command==("bedroom auto")) bedroom(2);
+    
+    else if (command==("kitchen off")) kitchen(0);
+    else if (command==("kitchen on")) kitchen(1);
+    else if (command==("kitchen auto")) kitchen(2);
+    
+    else if (command==("hall off")) hall(0);
+    else if (command==("hall on")) hall(1);
+    else if (command==("hall auto")) hall(2);
+    
+    else if (command==("bedroom light off")) bedroomlight(0);
+    else if (command==("bedroom light 1")) bedroomlight(1);
+    else if (command==("bedroom light 2")) bedroomlight(2);
+    else if (command==("bedroom light 3")) bedroomlight(3);
+    else if (command==("bedroom light 4")) bedroomlight(4);
+    else if (command==("bedroom light 5")) bedroomlight(5);
+    else if (command==("bedroom light auto")) bedroomlight(6);
+    
+    else if (command==("bedroom fan off")) bedroomfan(0);
+    else if (command==("bedroom fan on")) bedroomfan(1);
+    else if (command==("bedroom fan auto")) bedroomfan(2);
+    
+    else if (command==("kitchen light off")) kitchenlight(0);
+    else if (command==("kitchen light 1")) kitchenlight(1);
+    else if (command==("kitchen light 2")) kitchenlight(2);
+    else if (command==("kitchen light 3")) kitchenlight(3);
+    else if (command==("kitchen light 4")) kitchenlight(4);
+    else if (command==("kitchen light 5")) kitchenlight(5);
+    else if (command==("kitchen light auto")) kitchenlight(6);
+    
+    else if (command==("kitchen fan off")) kitchenfan(0);
+    else if (command==("kitchen fan on")) kitchenfan(1);
+    else if (command==("kitchen fan auto")) kitchenfan(2);
 }
-void wire(int y,int x){
-  Wire.beginTransmission(8); // transmit to device #8
-  Wire.write(y);        // sends five bytes
-  Wire.write(x);              // sends one byte
-  Wire.endTransmission();    // stop transmitting
+
+void bedroomlight(int val)
+{ //012345
+  if(val==6) //Automatic
+    for(int i=0;i<20;i++)
+    { 
+      if(EEBlue.available()) break;
+      lightReading();
+      delay(2000);
+    }    
+  else lightControl(val); //Manual
+}
+
+void bedroomfan(int val)//012
+{
+  if (val==2) tempReading(); //Automatic
+  else fanControl(val); //Manual
+}
+
+void bedroom(int val)
+{
+  switch(val)
+  {
+    case 0: //all off
+    {
+      bedroomlight(0);
+      bedroomfan(0);
+      break;
+    }
+    case 1: //all on
+    {
+      bedroomlight(5);
+      bedroomfan(1);
+      break;
+    }
+    case 2: //all auto
+    {
+      bedroomlight(6);
+      bedroomfan(2);
+      break;
+    }
+  }
+}
+
+void kitchenlight(int val) //Controlled by Arduino 4
+{
+  byte y =1;
+  byte x = val;
+  wire(y,x);
+}
+
+void kitchenfan(int val) //Controlled by Arduino 4
+{
+  byte y =2;
+  byte x = val;
+  wire(y,x);
+}
+
+void kitchen(int val)
+{
+  switch(val)
+  {
+    case 0: //all off
+    {
+      kitchenlight(val);
+      kitchenfan(val);
+      break;
+    }
+    case 1: //all on
+    {
+      kitchenlight(5);
+      kitchenfan(1);
+      break;
+    } 
+    case 2: //all auto
+    {
+      kitchenlight(6);
+      kitchenfan(2);
+      break;
+    }
+  }
+}
+
+void hall(int val) //Controlled by Arduino 4
+{
+  byte y =3;
+  byte x = val;
+  wire(y,x);
+}
+
+void wire(int y,int x) //Send information to Arduino 4
+{
+  Wire.beginTransmission(8); //Transmit to device #8
+  Wire.write(y);        //Sends five bytes - kitchen lights=0, kitchen fans=1, hall = 2
+  Wire.write(x);              //Sends one byte - val 
+  Wire.endTransmission();    //Stop transmitting
   x++;
   delay(500);
 }
 
-void fans(int fanval){
+void fans(int fanval) //All fans off or on
+{
   kitchenfan(fanval);
   bedroomfan(fanval);
 }
-void lights(int lval){
-switch(lval)
-{case(0):    kitchenlight(0);
-bedroomlight(0);
-hall(0);
-break;
-case(1):   kitchenlight(5);
-bedroomlight(5);
-hall(1);
-break;
-case(2):bedroomlight(6);
-kitchenlight(6);
-hall(2);
-break;}
+
+void lights(int lval) //Controll all lights
+{
+  switch(lval)
+  {
+    case(0): //all off
+      kitchenlight(0);
+      bedroomlight(0);
+      hall(0);
+      break;
+    case(1): //all on
+      kitchenlight(5);
+      bedroomlight(5);
+      hall(1);
+      break;
+    case(2): //all auto
+      bedroomlight(6);
+      kitchenlight(6);
+      hall(2);
+      break;
+  }
 }
-void all(int val){
+
+void all(int val) //all fans and lights on or off
+{
   lights(val);
   fans(val);
 }
