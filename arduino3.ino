@@ -1,76 +1,100 @@
-#include "DHT.h"
+//1. Bluetooth-controlled Lights and Fans enabling Manual as well as Automatic Control
+//Automatic Control-
+//2. Temperature-Controlled Fans
+//3. Light intensity-Controlled Lights
+
+//Communication between Arduino3 and Arduino4
 #include <Wire.h>
+
+//Bluetooth
 #include <SoftwareSerial.h>
 SoftwareSerial EEBlue(10, 11); // RX | TX
 String command="";//Stores response of the HC-06 Bluetooth device
-#define DHTPIN 12     // what digital pin we're connected to
+
+#include "DHT.h"
+#define DHTPIN 12     //DHT digital pin
 #define DHTTYPE DHT11   // DHT 11
+DHT dht(DHTPIN, DHTTYPE);
+
 #define FAN 9
 #define LDR A0
 int BARLED[]={2,3,4,5,6};
-DHT dht(DHTPIN, DHTTYPE);
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
-  EEBlue.begin(9600);  //Default Baud for comm 
+  EEBlue.begin(9600);  //Default baud rate for communication 
   Serial.println("The bluetooth gates are open.");
-  Serial.println("Connect to HC-05 from any other bluetooth device with 1234 as pairing key!.");
+  Serial.println("Connect to HC-05 from any other bluetooth device with 1234 as pairing key!");
+  
   dht.begin();
+  
   pinMode(FAN,OUTPUT);
   digitalWrite(FAN,LOW);
-  for(int i=0;i<5;i++){
+  
+  for(int i=0;i<5;i++)
+  {
     pinMode(BARLED[i],OUTPUT);
     digitalWrite(BARLED[i],LOW);
-}Wire.begin(); // join i2c bus (address optional for master)
+  }
+  
+  Wire.begin(); //Join i2c bus (address optional for master)
 }
 
-void loop() {
-if(EEBlue.available())
-{    while(EEBlue.available()) { // While there is more to be read, keep reading.
-  command += (char)EEBlue.read();
-}}command.trim();
-control(command);
-delay(5000);
-command="";
+void loop() 
+{
+  if(EEBlue.available())
+  {
+    while(EEBlue.available()) 
+    { // While there is more to be read, keep reading.
+      command += (char)EEBlue.read();
+    }
+  }
+  command.trim();
+  control(command);//Decipher command recieved 
+  delay(5000);
+  command="";//Reset command
 }
 
-void tempReading()
+void tempReading() //Read temperature from DHT and control fan
 {
-float t = dht.readTemperature();
-if (isnan(t)) {
-Serial.println("Failed to read from DHT sensor!");
-t=28;
-}
-Serial.print("Temperature: ");
-Serial.print(t);
-Serial.print(" *C ");  
-if(t>25) fanControl(1);
-else fanControl(0);
-}
-void fanControl(int val)
-{
-if (val==1) digitalWrite(FAN,HIGH) ;
-else if(val==0)digitalWrite(FAN,LOW) ;
+  float t = dht.readTemperature();
+  if (isnan(t)) //No reading
+  {
+    Serial.println("Failed to read from DHT sensor!");
+  }
+  Serial.print("Temperature: ");
+  Serial.print(t);
+  Serial.print(" *C ");  
+  if(t>25) fanControl(1); //If t>25 switch on fan
+  else fanControl(0); //else fan is off
 }
 
-void lightReading()
+void fanControl(int val) //Control fan based on value
 {
-int intensity = analogRead(LDR);
-int count;
-if(intensity<=75) count=5;
-else if(intensity<=200) count=4;
-else if(intensity<=300) count=3;
-else if(intensity<=400) count=2;
-else if(intensity<650) count=1;
-else if(intensity>=650) count=0;
-lightControl(count);
+  if (val==1) digitalWrite(FAN,HIGH) ;
+  else if(val==0)digitalWrite(FAN,LOW) ;
 }
-void lightControl(int count)
+
+void lightReading() //Read light intensity from LDR and control lights
 {
-if(count>5) count=5;
-if(count<0) count=0;
-for(int i=0;i<count;i++) digitalWrite(BARLED[i],HIGH);
-for(int i=count;i<5;i++) digitalWrite(BARLED[i],LOW);
+  int intensity = analogRead(LDR);//Read light intensity from LDR
+  int count;//max=5, min=0 corresponding to five light intensities
+  if(intensity<=75) count=5;
+  else if(intensity<=200) count=4;
+  else if(intensity<=300) count=3;
+  else if(intensity<=400) count=2;
+  else if(intensity<650) count=1;
+  else if(intensity>=650) count=0;
+  lightControl(count);//Control lights based on intensity
+}
+
+void lightControl(int count)//Control lights based on value
+{
+  if(count>5) count=5;
+  if(count<0) count=0;
+  for(int i=0;i<count;i++) digitalWrite(BARLED[i],HIGH); //Switch on all lights till particular light intensity
+  for(int i=count;i<5;i++) digitalWrite(BARLED[i],LOW); //Switch off all lights after particular light intensity
 }
 
 void control(String command)
