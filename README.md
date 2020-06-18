@@ -39,5 +39,5 @@ Smoke alarm: The smoke detector MQ7 continuously monitors the kitchen for presen
 In the kitchen and bedroom, there are lights and fans. In the hall, there are lights. Using the Bluetooth module, we can control these appliances- individually, room-wise, appliance-wise. The lights used are bar LEDs – they have levels that can be controlled too. There is also a mains option to control all appliances at once. Apart from manual control, there is an option to let it be controlled automatically- lights by a light dependent resistor (LDR) and fans by Digital humidity temperature sensor (DHT). The main Arduino UNO is connected to the Bluetooth module and controls the bedroom. It sends Bluetooth commands about control of kitchen and halls to secondary Arduino UNO. The secondary Arduino UNO controls the kitchen and the hall.
 
 <p align="center">
-  <img src="Block diagrams/Finallook.jpg">
+  <img src="Block diagrams/Finallook.jpeg">
 </p>
