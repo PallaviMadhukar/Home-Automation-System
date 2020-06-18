@@ -10,6 +10,10 @@
 2. Automatic closing of Gate using Ultrasonic sensor
 3. Gardening System
 
+Gate access: Gate movement is controlled via DC motor and rack-and-pinion gear system. For To enable clockwise and anticlockwise movement, we used an H-bridge. The RFID reader has stored the authorized access ID. When it reads the card/tag presented, it compares the ID read with the authorized access ID. If the ID matches, the gate opens. If it does not match, access is denied .i.e. the gate remains closed. After the gate has been opened, the ultrasonic sensor continuously monitors movement in the system. If there is an obstacle car/consumer), the gate remains open. If no obstacle is in the path of the gate, the gate is closed.
+
+Gardening system: The soil moisture sensor measures moisture content present in the soil. The pump supplies water to the garden when the moisture content in the soil is low. Pump working is controlled by H-bridge.
+
 **Arduino 2**
 <p align="center">
   <img src="Block diagrams/Arduino2.jpg">
